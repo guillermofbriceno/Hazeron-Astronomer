@@ -1,3 +1,3 @@
 # Hazeron-Astronomer
 
-A fast star map reader for Shores of Hazeron.
+A fast CLI for reading Shores of Hazeron star maps.
