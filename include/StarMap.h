@@ -26,6 +26,7 @@ public:
   std::vector<Resource> getAllBestResources();
   std::vector<Resource> findBestResource(std::string resource);
   std::string getResourceParameter(Resource resource, std::string parameter);
+  std::string getRingworldParameter(ringworld ringworld, std::string parameter);
   int getNumberOfSystems();
   int getNumberOfSectors();
 };
