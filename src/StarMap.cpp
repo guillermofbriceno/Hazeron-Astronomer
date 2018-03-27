@@ -115,12 +115,12 @@ string StarMap::getResourceParameter(Resource resource, string parameter) {
     int sy = planetVec.at(p).sys;
     return sysVec.at(sy).name;
   } else if (parameter == "Zone") {
-    int abun = resource.abundance[resource.highestZone - 1];
-    return to_string(abun);
+    return to_string(resource.highestZone);
   } else if (parameter == "Quality") {
     return to_string(resource.highestQl);
   } else if (parameter == "Abundance") {
-    return to_string(resource.highestZone);
+    int abun = resource.abundance[resource.highestZone - 1];
+    return to_string(abun);
   } else if (parameter == "Planet") {
     int p = resource.planet;
     return planetVec.at(p).name;

@@ -53,6 +53,17 @@ void startCli(StarMap &map) {
       } else {
         cout << "Invalid parameters for command 'find'" << endl;
       }
+    } else if (result.at(0) == "memory") {
+      if (result.size() == 1) {
+        vector<string> parameters = {"Galaxy","Sector","System","Planet","Zone","Name","Quality","Abundance","Selection"};
+        vector<vector<string>> res = generateResourceTable(memory.size(), parameters, memory, map);
+        displayTable(res, 2);
+      } else if (result.size() == 2) {
+        if (result.at(1) == "clear") {
+          memory.clear();
+          cout << "Memory Cleared." << endl;
+        }
+      }
     } else if (result.at(0) == "exit") {
       return;
     } else if (result.at(0) == "help") {
@@ -88,6 +99,9 @@ void help(string command) {
   } else {
     cout << "No such command." << endl;
   }
+}
+void detail(Resource resource, StarMap &map) {
+
 }
 
 void findRingworld(StarMap &map) {
