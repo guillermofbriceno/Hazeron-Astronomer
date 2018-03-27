@@ -27,6 +27,7 @@ elements parseMap(string xmldirectory) {
   vector<planet> planetVec;
   vector<Resource> resourceVec;
   vector<preons> preonsVec;
+  int resourceIdentifyCount = 1;
 
   while(!file.eof()) {
     string line = "";
@@ -124,6 +125,9 @@ elements parseMap(string xmldirectory) {
         }
 
         Resource rec(planetIndex, n, qarray, aarray, zones);
+        rec.identifier = resourceIdentifyCount;
+        resourceIdentifyCount++;
+
 
         resourceVec.push_back(rec);
       }

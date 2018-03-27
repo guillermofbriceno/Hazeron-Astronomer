@@ -19,10 +19,10 @@ int main(int argc, char **argv) {
 
   } else {
 
-    /*debug
+    
     StarMap map("C:/Users/Guillermo/Desktop/Blackstone Corporation Star Map.xml");
     startCli(map);
-    end debug */
+
 
     cout << "No xml found. Drag and drop the star map onto the exe." << endl;
     string temp;

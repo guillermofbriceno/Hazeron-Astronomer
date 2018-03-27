@@ -15,6 +15,8 @@ void startCli(StarMap &map) {
   cout << map.getNumberOfSystems() << " surveyed systems found over "
        << map.getNumberOfSectors() << " sectors." << endl;
 
+  vector<Resource> memory;
+
   while (true) {
     cout << endl << "-> ";
     string command;
@@ -41,9 +43,9 @@ void startCli(StarMap &map) {
       } else if (result.size() == 3) {
         if (result.at(1) == "best") {
           if (result.at(2) == "all") {
-            findAllBest(map);
+            findAllBest(memory, map);
           } else {
-            findBestResource(result.at(2), map);
+            findBestResource(memory, result.at(2), map);
           }
         } else {
           cout << "Invalid parameters for command 'find'" << endl;
@@ -108,10 +110,27 @@ void findRingworld(StarMap &map) {
   displayTable(dispText, 3);
 }
 
-void findBestResource(string resource, StarMap &map) {
+void findBestResource(vector<Resource> &memory, string resource, StarMap &map) {
   vector<Resource> resources = map.findBestResource(resource);
-  vector<string> parameters = {"Galaxy","Sector","System", "Planet", "Zone", "Quality", "Abundance"};
-  vector<vector<string>> dispText = generateResourceTable(parameters, resources, map);
+  for (unsigned int i = 0; i < resources.size(); i++) {
+    bool found = false;
+    if (memory.size() > 0 ) {
+      for (unsigned int j = 0; j < memory.size(); j++) {
+        found = resources.at(i).identifier == memory.at(j).identifier;
+        if (found) {
+          resources.at(i).selection = memory.at(j).selection;
+          break;
+        }
+      }
+    }
+    if (!found) {
+      resources.at(i).selection = memory.size() + 1;
+      memory.push_back(resources.at(i));
+    }
+  }
+
+  vector<string> parameters = {"Galaxy","Sector","System", "Planet", "Zone", "Quality", "Abundance", "Selection"};
+  vector<vector<string>> dispText = generateResourceTable(memory.size(), parameters, resources, map);
   if (dispText.size() == 1) {
     cout << "Resource not found." << endl;
     return;
@@ -119,10 +138,27 @@ void findBestResource(string resource, StarMap &map) {
   displayTable(dispText, 3);
 }
 
-void findAllBest(StarMap &map) {
+void findAllBest(vector<Resource> &memory, StarMap &map) {
   vector<Resource> resources = map.getAllBestResources();
-  vector<string> parameters = {"Name", "Quality"};
-  vector<vector<string>> dispText = generateResourceTable(parameters, resources, map);
+  for (unsigned int i = 0; i < resources.size(); i++) {
+    bool found = false;
+    if (memory.size() > 0 ) {
+      for (unsigned int j = 0; j < memory.size(); j++) {
+        found = resources.at(i).identifier == memory.at(j).identifier;
+        if (found) {
+          resources.at(i).selection = memory.at(j).selection;
+          break;
+        }
+      }
+    }
+    if (!found) {
+      resources.at(i).selection = memory.size() + 1;
+      memory.push_back(resources.at(i));
+    }
+  }
+
+  vector<string> parameters = {"Name", "Quality", "Selection"};
+  vector<vector<string>> dispText = generateResourceTable(memory.size(), parameters, resources, map);
   if (dispText.size() == 1) {
     cout << "No resources found." << endl;
     return;
@@ -130,13 +166,19 @@ void findAllBest(StarMap &map) {
   displayTable(dispText, 3);
 }
 
-vector<vector<string>> generateResourceTable(vector<string> parameters, vector<Resource> bestResults, StarMap &map) {
+vector<vector<string>> generateResourceTable(int currentMemory, vector<string> parameters, vector<Resource> bestResults, StarMap &map) {
   vector<vector<string>> dispText;
   dispText.push_back(parameters);
   for (unsigned int i = 1; i < bestResults.size() + 1; i++) {
     vector<string> temp;
     for (unsigned int j = 0; j < dispText.at(0).size(); j++) {
-      temp.push_back(map.getResourceParameter(bestResults.at(i - 1), dispText.at(0).at(j)));
+      if ((parameters.back() == "Selection") && j == (dispText.at(0).size() - 1)) {
+        string selection = "[" + to_string(bestResults.at(i - 1).selection) + "]";
+        temp.push_back(selection);
+        currentMemory++;
+      } else {
+        temp.push_back(map.getResourceParameter(bestResults.at(i - 1), dispText.at(0).at(j)));
+      }
     }
     dispText.push_back(temp);
   }

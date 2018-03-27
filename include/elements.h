@@ -11,7 +11,9 @@ struct Resource {
   int zones;
   int highestQl;
   int highestZone;
-
+  int identifier;
+  int selection;
+  
   Resource(int p, std::string n, int q[3], int a[3], int z);
 };
 
