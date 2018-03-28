@@ -19,6 +19,7 @@ private:
   std::vector<planet> planetVec;
   std::vector<Resource> resourceVec;
   std::vector<preons> preonsVec;
+  int potentialRingworlds;
 public:
   StarMap();
   StarMap(std::string xmldirectory);
@@ -29,4 +30,5 @@ public:
   std::string getRingworldParameter(ringworld ringworld, std::string parameter);
   int getNumberOfSystems();
   int getNumberOfSectors();
+  int getPotentialRingworlds();
 };

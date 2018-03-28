@@ -13,7 +13,7 @@ struct Resource {
   int highestZone;
   int identifier;
   int selection;
-  
+
   Resource(int p, std::string n, int q[3], int a[3], int z);
 };
 
@@ -30,6 +30,7 @@ struct planet {
   std::string bodyType;
   std::string orbit;
   std::string zone;
+  bool isHabitableEnvironment;
   int resource;
   int sys;
 };
@@ -43,6 +44,8 @@ struct star {
   std::string hab;
   std::string shell;
   std::string diameter;
+  bool habitableWithinOneAu;
+  float habitableDistance;
   int preons;
   int sys;
 };
@@ -96,4 +99,5 @@ struct elements {
   std::vector<planet> planetVec;
   std::vector<Resource> resourceVec;
   std::vector<preons> preonsVec;
+  int potentialRingworlds;
 };

@@ -61,8 +61,18 @@ void startCli(StarMap &map) {
       } else if (result.size() == 2) {
         if (result.at(1) == "clear") {
           memory.clear();
-          cout << "Memory Cleared." << endl;
+          cout << "Memory cleared." << endl;
+        } else {
+          cout << "Invalid parameter." << endl;
         }
+      } else {
+        cout << "Invalid parameters." << endl;
+      }
+    } else if (result.at(0) == "detail") {
+      if (result.size() == 2) {
+        detail(memory, result.at(1), map);
+      } else {
+        cout << "Invalid parameters." << endl;
       }
     } else if (result.at(0) == "exit") {
       return;
@@ -84,6 +94,7 @@ void help(string command) {
   if (command == "&^none") {
     cout << "Available commands: " << endl << endl
          << "find       Finds objects and resources with quality constraints." << endl
+         << "memory     Displays or clears the memory." << endl
          << "exit       Ends the program." << endl << endl
          << "Type help <command> for detail." << endl;
   } else if (command == "find") {
@@ -96,12 +107,22 @@ void help(string command) {
     cout << "Exits the program." << endl;
   } else if (command == "help") {
     cout << "Calm down, we've called the police." << endl;
+  } else if (command == "memory") {
+    cout << "memory <'clear'>" << endl << endl
+         << "'memory' with no parameters displays all resources in memory." << endl
+         << "'memory clear' clears all resources in memory." << endl;
   } else {
     cout << "No such command." << endl;
   }
 }
-void detail(Resource resource, StarMap &map) {
-
+void detail(vector<Resource> &memory, string selection, StarMap &map) {
+  if (isDigit(selection)) {
+    if (stoi(selection) <= memory.size() && stoi(selection) != 0) {
+      cout << memory.at(stoi(selection) - 1).name << endl;
+    } else {
+      cout << "Input out of range in memory." << endl;
+    }
+  }
 }
 
 void findRingworld(StarMap &map) {
@@ -122,6 +143,9 @@ void findRingworld(StarMap &map) {
     return;
   }
   displayTable(dispText, 3);
+  cout << endl << left << setw(25) << "Potential Ringworlds: " << map.getPotentialRingworlds() << endl <<
+    setw(25) << "With 3% Probability: " << map.getPotentialRingworlds() * 0.03 << endl <<
+    setw(25) << "Actual: " << bestResults.size() << endl;
 }
 
 void findBestResource(vector<Resource> &memory, string resource, StarMap &map) {
@@ -171,7 +195,7 @@ void findAllBest(vector<Resource> &memory, StarMap &map) {
     }
   }
 
-  vector<string> parameters = {"Name", "Quality", "Selection"};
+  vector<string> parameters = {"Galaxy","Sector","System","Planet","Name","Quality","Selection"};
   vector<vector<string>> dispText = generateResourceTable(memory.size(), parameters, resources, map);
   if (dispText.size() == 1) {
     cout << "No resources found." << endl;
@@ -217,4 +241,22 @@ void displayTable(vector<vector<string>> dispText, int separation) {
     }
     cout << endl;
   }
+}
+
+bool isDigit(string s) {
+  if (s.find_first_not_of("0123456789") == string::npos) {
+    try {
+      stoi(s);
+    } catch (const out_of_range& e) {
+      cout << "Input is out of range." << endl;
+      return false;
+    } catch (const invalid_argument& e) {
+      cout << "Input is not a number." << endl;
+      return false;
+    }
+    return true;
+  }
+
+  cout << "Invalid input." << endl;
+  return false;
 }

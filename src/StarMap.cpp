@@ -22,6 +22,7 @@ StarMap::StarMap(string xmldirectory) {
   planetVec = el.planetVec;
   resourceVec = el.resourceVec;
   preonsVec = el.preonsVec;
+  potentialRingworlds = el.potentialRingworlds;
 }
 
 //generates a vector of the first instance of every ringworld.
@@ -125,7 +126,17 @@ string StarMap::getResourceParameter(Resource resource, string parameter) {
     int p = resource.planet;
     return planetVec.at(p).name;
   } else if (parameter == "Name") {
-    return resource.name;
+    if (resource.name == "Water in the Environment") {
+      return "Water";
+    } else if (resource.name == "Antiflux Particles") {
+      return "Antiflux";
+    } else if (resource.name == "Vegetation Density") {
+      return "Vegetation Den.";
+    } else if (resource.name == "Borexino Precipitate") {
+      return "Borexino Prec.";
+    } else {
+      return resource.name;
+    }
   }
 
   return "Invalid Parameter in function getResourceParameter()";
@@ -165,4 +176,8 @@ int StarMap::getNumberOfSystems() {
 
 int StarMap::getNumberOfSectors() {
   return sectorVec.size();
+}
+
+int StarMap::getPotentialRingworlds() {
+  return potentialRingworlds;
 }

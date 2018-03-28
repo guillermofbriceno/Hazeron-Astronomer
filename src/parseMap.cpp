@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <iostream>
 
 #include "elements.h"
 
@@ -27,7 +28,11 @@ elements parseMap(string xmldirectory) {
   vector<planet> planetVec;
   vector<Resource> resourceVec;
   vector<preons> preonsVec;
+  int potentialRingworlds = 0;
+
   int resourceIdentifyCount = 1;
+
+  bool lastWasHabOneAU = false;
 
   while(!file.eof()) {
     string line = "";
@@ -65,6 +70,8 @@ elements parseMap(string xmldirectory) {
         s.sector = sectorVec.size() - 1;
 
         sysVec.push_back(s);
+
+        lastWasHabOneAU = false;
       }
     }
 
@@ -80,6 +87,30 @@ elements parseMap(string xmldirectory) {
       s.diameter = getParameter(line, "diameter");
       s.preons = preonsVec.size();
       s.sys = sysVec.size() - 1;
+
+      if ((s.hab.find("Habitable Zone at ") != string::npos) && (s.orbit.find("Primary")) != string::npos) {
+        int auPos = s.hab.find("au");
+        int atPos = s.hab.find(" at ");
+        atPos += 4;
+        string num = s.hab.substr(atPos, auPos - atPos);
+        float orbDistance = stof(num);
+        s.habitableDistance = orbDistance;
+        if (orbDistance <= 1.0) {
+          s.habitableWithinOneAu = true;
+          lastWasHabOneAU = true;
+          potentialRingworlds++;
+        }
+      } else if (lastWasHabOneAU) {
+        int auPos = s.orbit.find("au");
+        int atPos = s.orbit.find(" at ");
+        atPos += 4;
+        string num = s.orbit.substr(atPos, auPos - atPos);
+        float orbDistance = stof(num);
+        if (orbDistance <= starVec.back().habitableDistance) {
+          potentialRingworlds--;
+        }
+      }
+
       starVec.push_back(s);
     }
 
@@ -93,6 +124,24 @@ elements parseMap(string xmldirectory) {
       plan.resource = resourceVec.size();
       plan.sys = sysVec.size() - 1;
       planetVec.push_back(plan);
+    }
+
+    if (line.find("<atmosphere") != string::npos) {
+      planetVec.back().isHabitableEnvironment = false;
+      string zone = planetVec.back().zone;
+      if ((zone.find("Inner") != string::npos) || (line.find("Habitable") != string::npos) || (line.find("Outer") != string::npos)) {
+        if ((line.find("Tainted") != string::npos) || (line.find("Standard") != string::npos)) {
+          string densityString;
+          int commaPos = line.find(",");
+          int percentPos = line.find("%");
+          commaPos += 2;
+          densityString = line.substr(commaPos, percentPos - commaPos);
+          int densityInt = stoi(densityString);
+          if ((densityInt >= 15) || (densityInt <= 85)) {
+            planetVec.back().isHabitableEnvironment = true;
+          }
+        }
+      }
     }
 
     if (line.find("<resource") != string::npos) {
@@ -144,6 +193,7 @@ elements parseMap(string xmldirectory) {
   el.planetVec = planetVec;
   el.resourceVec = resourceVec;
   el.preonsVec = preonsVec;
+  el.potentialRingworlds = potentialRingworlds;
 
   return el;
 }
