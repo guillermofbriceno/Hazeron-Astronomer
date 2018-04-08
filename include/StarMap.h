@@ -11,7 +11,6 @@
 #include "elements.h"
 
 class StarMap {
-private:
   std::vector<galaxy> galaxyVec;
   std::vector<sector> sectorVec;
   std::vector<sys> sysVec;
@@ -24,11 +23,11 @@ public:
   StarMap();
   StarMap(std::string xmldirectory);
   std::vector<ringworld> getRingworlds();
-  std::vector<Resource> getAllBestResources();
+  std::vector<Resource> getAllBestResources() const;
   std::vector<Resource> findBestResource(std::string resource);
-  std::string getResourceParameter(Resource resource, std::string parameter);
-  std::string getRingworldParameter(ringworld ringworld, std::string parameter);
-  int getNumberOfSystems();
-  int getNumberOfSectors();
-  int getPotentialRingworlds();
+  std::string getResourceParameter(Resource resource, const std::string& parameter) const;
+  std::string getRingworldParameter(ringworld ringworld, std::string parameter) const;
+  int getNumberOfSystems() const;
+  int getNumberOfSectors() const;
+  int getPotentialRingworlds() const;
 };

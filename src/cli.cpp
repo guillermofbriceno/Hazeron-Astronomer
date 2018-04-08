@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void startCli(StarMap &map) {
+void startCli(StarMap& map) {
   cout << map.getNumberOfSystems() << " surveyed systems found over "
        << map.getNumberOfSectors() << " sectors." << endl;
 
@@ -70,7 +70,7 @@ void startCli(StarMap &map) {
       }
     } else if (result.at(0) == "detail") {
       if (result.size() == 2) {
-        detail(memory, result.at(1), map);
+        detail(memory, result.at(1));
       } else {
         cout << "Invalid parameters." << endl;
       }
@@ -90,7 +90,7 @@ void startCli(StarMap &map) {
   }
 }
 
-void help(string command) {
+void help(const string& command) {
   if (command == "&^none") {
     cout << "Available commands: " << endl << endl
          << "find       Finds objects and resources with quality constraints." << endl
@@ -115,7 +115,7 @@ void help(string command) {
     cout << "No such command." << endl;
   }
 }
-void detail(vector<Resource> &memory, string selection, StarMap &map) {
+void detail(const vector<Resource>& memory, const string& selection) {
   if (isDigit(selection)) {
     if (stoi(selection) <= memory.size() && stoi(selection) != 0) {
       cout << memory.at(stoi(selection) - 1).name << endl;

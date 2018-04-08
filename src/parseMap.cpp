@@ -7,7 +7,7 @@
 
 using namespace std;
 
-string getParameter(string line, string tag) {
+string getParameter(const string& line, string tag) {
   tag = tag + "=";
   if (line.find(tag) != string::npos) {
     int posf = line.find(tag);
@@ -19,7 +19,7 @@ string getParameter(string line, string tag) {
   }
 }
 
-elements parseMap(string xmldirectory) {
+elements parseMap(const string& xmldirectory) {
   ifstream file(xmldirectory);
   vector<galaxy> galaxyVec;
   vector<sector> sectorVec;
