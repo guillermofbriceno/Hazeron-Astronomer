@@ -32,60 +32,62 @@ void startCli(StarMap& map) {
       for (unsigned int j = 0; j < result.at(i).length(); j++)
         result.at(i)[j] = tolower(result.at(i)[j]);
     }
-
-    if (result.at(0) == "find") {
-      if (result.size() == 2) {
-        if (result.at(1).find("ringworld") != string::npos) {
-          findRingworld(map);
-        } else {
-          cout << "Invalid parameter '" << result.at(1) << "'" << endl;
-        }
-      } else if (result.size() == 3) {
-        if (result.at(1) == "best") {
-          if (result.at(2) == "all") {
-            findAllBest(memory, map);
+    
+    if (result.size() > 0) {
+      if (result.at(0) == "find") {
+        if (result.size() == 2) {
+          if (result.at(1).find("ringworld") != string::npos) {
+            findRingworld(map);
           } else {
-            findBestResource(memory, result.at(2), map);
+            cout << "Invalid parameter '" << result.at(1) << "'" << endl;
+          }
+        } else if (result.size() == 3) {
+          if (result.at(1) == "best") {
+            if (result.at(2) == "all") {
+              findAllBest(memory, map);
+            } else {
+              findBestResource(memory, result.at(2), map);
+            }
+          } else {
+            cout << "Invalid parameters for command 'find'" << endl;
           }
         } else {
           cout << "Invalid parameters for command 'find'" << endl;
         }
-      } else {
-        cout << "Invalid parameters for command 'find'" << endl;
-      }
-    } else if (result.at(0) == "memory") {
-      if (result.size() == 1) {
-        vector<string> parameters = {"Galaxy","Sector","System","Planet","Zone","Name","Quality","Abundance","Selection"};
-        vector<vector<string>> res = generateResourceTable(memory.size(), parameters, memory, map);
-        displayTable(res, 2);
-      } else if (result.size() == 2) {
-        if (result.at(1) == "clear") {
-          memory.clear();
-          cout << "Memory cleared." << endl;
+      } else if (result.at(0) == "memory") {
+        if (result.size() == 1) {
+          vector<string> parameters = {"Galaxy","Sector","System","Planet","Zone","Name","Quality","Abundance","Selection"};
+          vector<vector<string>> res = generateResourceTable(memory.size(), parameters, memory, map);
+          displayTable(res, 2);
+        } else if (result.size() == 2) {
+          if (result.at(1) == "clear") {
+            memory.clear();
+            cout << "Memory cleared." << endl;
+          } else {
+            cout << "Invalid parameter." << endl;
+          }
         } else {
-          cout << "Invalid parameter." << endl;
+          cout << "Invalid parameters." << endl;
+        }
+      } else if (result.at(0) == "detail") {
+        if (result.size() == 2) {
+          detail(memory, result.at(1));
+        } else {
+          cout << "Invalid parameters." << endl;
+        }
+      } else if (result.at(0) == "exit") {
+        return;
+      } else if (result.at(0) == "help") {
+        if (result.size() == 2) {
+          help(result.at(1));
+        } else if (result.size() == 1) {
+          help("&^none");
+        } else {
+          cout << "Invalid parameters." << endl;
         }
       } else {
-        cout << "Invalid parameters." << endl;
+        cout << "Invalid command." << endl;
       }
-    } else if (result.at(0) == "detail") {
-      if (result.size() == 2) {
-        detail(memory, result.at(1));
-      } else {
-        cout << "Invalid parameters." << endl;
-      }
-    } else if (result.at(0) == "exit") {
-      return;
-    } else if (result.at(0) == "help") {
-      if (result.size() == 2) {
-        help(result.at(1));
-      } else if (result.size() == 1) {
-        help("&^none");
-      } else {
-        cout << "Invalid parameters." << endl;
-      }
-    } else {
-      cout << "Invalid command." << endl;
     }
   }
 }
