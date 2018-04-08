@@ -170,14 +170,14 @@ string StarMap::getRingworldParameter(ringworld ringworld, string parameter) con
   return "Invalid Parameter in function getResourceParameter()";
 }
 
-int StarMap::getNumberOfSystems() {
+int StarMap::getNumberOfSystems() const {
   return sysVec.size();
 }
 
-int StarMap::getNumberOfSectors() {
+int StarMap::getNumberOfSectors() const {
   return sectorVec.size();
 }
 
-int StarMap::getPotentialRingworlds() {
+int StarMap::getPotentialRingworlds() const {
   return potentialRingworlds;
 }

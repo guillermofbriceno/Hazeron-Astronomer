@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void startCli(StarMap &map) {
+void startCli(StarMap& map) {
   cout << map.getNumberOfSystems() << " surveyed systems found over "
        << map.getNumberOfSectors() << " sectors." << endl;
 
@@ -90,7 +90,7 @@ void startCli(StarMap &map) {
   }
 }
 
-void help(string command) {
+void help(const string& command) {
   if (command == "&^none") {
     cout << "Available commands: " << endl << endl
          << "find       Finds objects and resources with quality constraints." << endl

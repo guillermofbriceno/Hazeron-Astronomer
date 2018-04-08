@@ -2,8 +2,8 @@
 
 #include "StarMap.h"
 
-void startCli(StarMap &map);
-void help(std::string commmand);
+void startCli(StarMap& map);
+void help(const std::string& commmand);
 void findRingworld(StarMap &map);
 void detail(const std::vector<Resource>& memory, const std::string& selection);
 void findBestResource(std::vector<Resource> &memory, std::string resource, StarMap &map);
