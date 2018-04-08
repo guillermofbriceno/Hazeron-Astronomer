@@ -7,7 +7,7 @@ BUILD=TRUE
 STATIC=FALSE
 
 ifeq ($(BUILD),TRUE)
-	CFLAGS += $(-02)
+	CFLAGS += -O2
 	ifeq ($(STATIC),TRUE)
 		CFLAGS += -static-libgcc
 		CFLAGS += -static-libstdc++
