@@ -5,7 +5,7 @@
 void startCli(StarMap &map);
 void help(std::string commmand);
 void findRingworld(StarMap &map);
-void detail(std::vector<Resource> &memory, std::string selection, StarMap &map);
+void detail(const std::vector<Resource>& memory, const std::string& selection);
 void findBestResource(std::vector<Resource> &memory, std::string resource, StarMap &map);
 void findAllBest(std::vector<Resource> &memory, StarMap &map);
 std::vector<std::vector<std::string>> generateResourceTable(int currentMemory, std::vector<std::string>

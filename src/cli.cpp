@@ -70,7 +70,7 @@ void startCli(StarMap &map) {
       }
     } else if (result.at(0) == "detail") {
       if (result.size() == 2) {
-        detail(memory, result.at(1), map);
+        detail(memory, result.at(1));
       } else {
         cout << "Invalid parameters." << endl;
       }
@@ -115,7 +115,7 @@ void help(string command) {
     cout << "No such command." << endl;
   }
 }
-void detail(vector<Resource> &memory, string selection, StarMap &map) {
+void detail(const vector<Resource>& memory, const string& selection) {
   if (isDigit(selection)) {
     if (stoi(selection) <= memory.size() && stoi(selection) != 0) {
       cout << memory.at(stoi(selection) - 1).name << endl;
