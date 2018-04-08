@@ -48,7 +48,7 @@ vector<ringworld> StarMap::getRingworlds() {
 }
 
 //generates a vector of all of the highest quality resources in the map.
-vector<Resource> StarMap::getAllBestResources() {
+vector<Resource> StarMap::getAllBestResources() const {
   vector<Resource> bestResults;
   for (unsigned int i = 0; i < resourceVec.size(); i++) {
     bool alreadyExists = false;
@@ -93,7 +93,7 @@ vector<Resource> StarMap::findBestResource(string resource) {
   return bestResults;
 }
 
-string StarMap::getResourceParameter(Resource resource, string parameter) {
+string StarMap::getResourceParameter(Resource resource, const string& parameter) const {
   if (parameter == "Galaxy"){
     int p = resource.planet;
     int sy = planetVec.at(p).sys;
@@ -142,7 +142,7 @@ string StarMap::getResourceParameter(Resource resource, string parameter) {
   return "Invalid Parameter in function getResourceParameter()";
 }
 
-string StarMap::getRingworldParameter(ringworld ringworld, string parameter) {
+string StarMap::getRingworldParameter(ringworld ringworld, string parameter) const {
   if (parameter == "Galaxy"){
     int sy = ringworld.sys;
     int se = sysVec.at(sy).sector;
