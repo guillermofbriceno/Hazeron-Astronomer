@@ -50,21 +50,21 @@ vector<ringworld> StarMap::getRingworlds() const {
 //generates a vector of all of the highest quality resources in the map.
 vector<Resource> StarMap::getAllBestResources() const {
   vector<Resource> bestResults;
-  for (unsigned int i = 0; i < resourceVec.size(); i++) {
+  for (const auto& x : resourceVec) {
     bool alreadyExists = false;
     if (bestResults.empty()) {
-      bestResults.push_back(resourceVec.at(i));
+      bestResults.push_back(x);
     } else {
-      for (unsigned int j = 0; j < bestResults.size(); j++) {
-        if (bestResults.at(j).name == resourceVec.at(i).name) {
-          if (bestResults.at(j).highestQl < resourceVec.at(i).highestQl) {
-            bestResults.at(j) = resourceVec.at(i);
+	  for (auto& y : bestResults) {
+        if (y.name == x.name) {
+          if (y.highestQl < x.highestQl) {
+            y = x;
           }
           alreadyExists = true;
         }
       }
       if (!alreadyExists)
-        bestResults.push_back(resourceVec.at(i));
+        bestResults.push_back(x);
     }
   }
 
