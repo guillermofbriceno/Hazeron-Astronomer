@@ -11,9 +11,11 @@
 
 using namespace std;
 
-void startCli(StarMap &map) {
+void startCli(StarMap& map) {
   cout << map.getNumberOfSystems() << " surveyed systems found over "
        << map.getNumberOfSectors() << " sectors." << endl;
+
+  vector<Resource> memory;
 
   while (true) {
     cout << endl << "-> ";
@@ -30,47 +32,71 @@ void startCli(StarMap &map) {
       for (unsigned int j = 0; j < result.at(i).length(); j++)
         result.at(i)[j] = tolower(result.at(i)[j]);
     }
-
-    if (result.at(0) == "find") {
-      if (result.size() == 2) {
-        if (result.at(1).find("ringworld") != string::npos) {
-          findRingworld(map);
-        } else {
-          cout << "Invalid parameter '" << result.at(1) << "'" << endl;
-        }
-      } else if (result.size() == 3) {
-        if (result.at(1) == "best") {
-          if (result.at(2) == "all") {
-            findAllBest(map);
+    
+    if (result.size() > 0) {
+      if (result.at(0) == "find") {
+        if (result.size() == 2) {
+          if (result.at(1).find("ringworld") != string::npos) {
+            findRingworld(map);
           } else {
-            findBestResource(result.at(2), map);
+            cout << "Invalid parameter '" << result.at(1) << "'" << endl;
+          }
+        } else if (result.size() == 3) {
+          if (result.at(1) == "best") {
+            if (result.at(2) == "all") {
+              findAllBest(memory, map);
+            } else {
+              findBestResource(memory, result.at(2), map);
+            }
+          } else {
+            cout << "Invalid parameters for command 'find'" << endl;
           }
         } else {
           cout << "Invalid parameters for command 'find'" << endl;
         }
+      } else if (result.at(0) == "memory") {
+        if (result.size() == 1) {
+          vector<string> parameters = {"Galaxy","Sector","System","Planet","Zone","Name","Quality","Abundance","Selection"};
+          vector<vector<string>> res = generateResourceTable(memory.size(), parameters, memory, map);
+          displayTable(res, 2);
+        } else if (result.size() == 2) {
+          if (result.at(1) == "clear") {
+            memory.clear();
+            cout << "Memory cleared." << endl;
+          } else {
+            cout << "Invalid parameter." << endl;
+          }
+        } else {
+          cout << "Invalid parameters." << endl;
+        }
+      } else if (result.at(0) == "detail") {
+        if (result.size() == 2) {
+          detail(memory, result.at(1));
+        } else {
+          cout << "Invalid parameters." << endl;
+        }
+      } else if (result.at(0) == "exit") {
+        return;
+      } else if (result.at(0) == "help") {
+        if (result.size() == 2) {
+          help(result.at(1));
+        } else if (result.size() == 1) {
+          help("&^none");
+        } else {
+          cout << "Invalid parameters." << endl;
+        }
       } else {
-        cout << "Invalid parameters for command 'find'" << endl;
+        cout << "Invalid command." << endl;
       }
-    } else if (result.at(0) == "exit") {
-      return;
-    } else if (result.at(0) == "help") {
-      if (result.size() == 2) {
-        help(result.at(1));
-      } else if (result.size() == 1) {
-        help("&^none");
-      } else {
-        cout << "Invalid parameters." << endl;
-      }
-    } else {
-      cout << "Invalid command." << endl;
     }
   }
 }
 
-void help(string command) {
+void help(const string& command) {
   if (command == "&^none") {
     cout << "Available commands: " << endl << endl
          << "find       Finds objects and resources with quality constraints." << endl
+         << "memory     Displays or clears the memory." << endl
          << "exit       Ends the program." << endl << endl
          << "Type help <command> for detail." << endl;
   } else if (command == "find") {
@@ -83,8 +109,21 @@ void help(string command) {
     cout << "Exits the program." << endl;
   } else if (command == "help") {
     cout << "Calm down, we've called the police." << endl;
+  } else if (command == "memory") {
+    cout << "memory <'clear'>" << endl << endl
+         << "'memory' with no parameters displays all resources in memory." << endl
+         << "'memory clear' clears all resources in memory." << endl;
   } else {
     cout << "No such command." << endl;
+  }
+}
+void detail(const vector<Resource>& memory, const string& selection) {
+  if (isDigit(selection)) {
+    if (stoi(selection) <= memory.size() && stoi(selection) != 0) {
+      cout << memory.at(stoi(selection) - 1).name << endl;
+    } else {
+      cout << "Input out of range in memory." << endl;
+    }
   }
 }
 
@@ -106,12 +145,32 @@ void findRingworld(StarMap &map) {
     return;
   }
   displayTable(dispText, 3);
+  cout << endl << left << setw(25) << "Potential Ringworlds: " << map.getPotentialRingworlds() << endl <<
+    setw(25) << "With 3% Probability: " << map.getPotentialRingworlds() * 0.03 << endl <<
+    setw(25) << "Actual: " << bestResults.size() << endl;
 }
 
-void findBestResource(string resource, StarMap &map) {
+void findBestResource(vector<Resource> &memory, string resource, StarMap &map) {
   vector<Resource> resources = map.findBestResource(resource);
-  vector<string> parameters = {"Galaxy","Sector","System", "Planet", "Zone", "Quality", "Abundance"};
-  vector<vector<string>> dispText = generateResourceTable(parameters, resources, map);
+  for (unsigned int i = 0; i < resources.size(); i++) {
+    bool found = false;
+    if (memory.size() > 0 ) {
+      for (unsigned int j = 0; j < memory.size(); j++) {
+        found = resources.at(i).identifier == memory.at(j).identifier;
+        if (found) {
+          resources.at(i).selection = memory.at(j).selection;
+          break;
+        }
+      }
+    }
+    if (!found) {
+      resources.at(i).selection = memory.size() + 1;
+      memory.push_back(resources.at(i));
+    }
+  }
+
+  vector<string> parameters = {"Galaxy","Sector","System", "Planet", "Zone", "Quality", "Abundance", "Selection"};
+  vector<vector<string>> dispText = generateResourceTable(memory.size(), parameters, resources, map);
   if (dispText.size() == 1) {
     cout << "Resource not found." << endl;
     return;
@@ -119,10 +178,27 @@ void findBestResource(string resource, StarMap &map) {
   displayTable(dispText, 3);
 }
 
-void findAllBest(StarMap &map) {
+void findAllBest(vector<Resource> &memory, StarMap &map) {
   vector<Resource> resources = map.getAllBestResources();
-  vector<string> parameters = {"Name", "Quality"};
-  vector<vector<string>> dispText = generateResourceTable(parameters, resources, map);
+  for (unsigned int i = 0; i < resources.size(); i++) {
+    bool found = false;
+    if (memory.size() > 0 ) {
+      for (unsigned int j = 0; j < memory.size(); j++) {
+        found = resources.at(i).identifier == memory.at(j).identifier;
+        if (found) {
+          resources.at(i).selection = memory.at(j).selection;
+          break;
+        }
+      }
+    }
+    if (!found) {
+      resources.at(i).selection = memory.size() + 1;
+      memory.push_back(resources.at(i));
+    }
+  }
+
+  vector<string> parameters = {"Galaxy","Sector","System","Planet","Name","Quality","Selection"};
+  vector<vector<string>> dispText = generateResourceTable(memory.size(), parameters, resources, map);
   if (dispText.size() == 1) {
     cout << "No resources found." << endl;
     return;
@@ -130,13 +206,19 @@ void findAllBest(StarMap &map) {
   displayTable(dispText, 3);
 }
 
-vector<vector<string>> generateResourceTable(vector<string> parameters, vector<Resource> bestResults, StarMap &map) {
+vector<vector<string>> generateResourceTable(int currentMemory, vector<string> parameters, vector<Resource> bestResults, StarMap &map) {
   vector<vector<string>> dispText;
   dispText.push_back(parameters);
   for (unsigned int i = 1; i < bestResults.size() + 1; i++) {
     vector<string> temp;
     for (unsigned int j = 0; j < dispText.at(0).size(); j++) {
-      temp.push_back(map.getResourceParameter(bestResults.at(i - 1), dispText.at(0).at(j)));
+      if ((parameters.back() == "Selection") && j == (dispText.at(0).size() - 1)) {
+        string selection = "[" + to_string(bestResults.at(i - 1).selection) + "]";
+        temp.push_back(selection);
+        currentMemory++;
+      } else {
+        temp.push_back(map.getResourceParameter(bestResults.at(i - 1), dispText.at(0).at(j)));
+      }
     }
     dispText.push_back(temp);
   }
@@ -161,4 +243,22 @@ void displayTable(vector<vector<string>> dispText, int separation) {
     }
     cout << endl;
   }
+}
+
+bool isDigit(string s) {
+  if (s.find_first_not_of("0123456789") == string::npos) {
+    try {
+      stoi(s);
+    } catch (const out_of_range& e) {
+      cout << "Input is out of range." << endl;
+      return false;
+    } catch (const invalid_argument& e) {
+      cout << "Input is not a number." << endl;
+      return false;
+    }
+    return true;
+  }
+
+  cout << "Invalid input." << endl;
+  return false;
 }

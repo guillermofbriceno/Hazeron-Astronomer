@@ -12,21 +12,17 @@
 using namespace std;
 
 int main(int argc, char **argv) {
-  if (argc > 1) {
+  if (argc == 2) {
     string filename(argv[1]);
     StarMap map(filename);
     startCli(map);
 
+	return 0;
+
   } else {
 
-    /*debug
-    StarMap map("C:/Users/Guillermo/Desktop/Blackstone Corporation Star Map.xml");
-    startCli(map);
-    end debug */
+    cerr << "No xml found. Drag and drop the star map onto the exe." << endl;
 
-    cout << "No xml found. Drag and drop the star map onto the exe." << endl;
-    string temp;
-    cin >> temp;
-    return 0;
+    return 1;
   }
 }

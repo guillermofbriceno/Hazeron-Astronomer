@@ -8,6 +8,8 @@ Resource::Resource(int p, string n, int q[3], int a[3], int z) {
   planet = p;
   name = n;
   zones = z;
+  identifier = 0;
+  selection = 0;
   if (zones == 1) {
     highestZone = 1;
     highestQl = q[0];

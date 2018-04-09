@@ -22,6 +22,7 @@ StarMap::StarMap(string xmldirectory) {
   planetVec = el.planetVec;
   resourceVec = el.resourceVec;
   preonsVec = el.preonsVec;
+  potentialRingworlds = el.potentialRingworlds;
 }
 
 //generates a vector of the first instance of every ringworld.
@@ -47,7 +48,7 @@ vector<ringworld> StarMap::getRingworlds() {
 }
 
 //generates a vector of all of the highest quality resources in the map.
-vector<Resource> StarMap::getAllBestResources() {
+vector<Resource> StarMap::getAllBestResources() const {
   vector<Resource> bestResults;
   for (unsigned int i = 0; i < resourceVec.size(); i++) {
     bool alreadyExists = false;
@@ -92,7 +93,7 @@ vector<Resource> StarMap::findBestResource(string resource) {
   return bestResults;
 }
 
-string StarMap::getResourceParameter(Resource resource, string parameter) {
+string StarMap::getResourceParameter(Resource resource, const string& parameter) const {
   if (parameter == "Galaxy"){
     int p = resource.planet;
     int sy = planetVec.at(p).sys;
@@ -115,23 +116,33 @@ string StarMap::getResourceParameter(Resource resource, string parameter) {
     int sy = planetVec.at(p).sys;
     return sysVec.at(sy).name;
   } else if (parameter == "Zone") {
-    int abun = resource.abundance[resource.highestZone - 1];
-    return to_string(abun);
+    return to_string(resource.highestZone);
   } else if (parameter == "Quality") {
     return to_string(resource.highestQl);
   } else if (parameter == "Abundance") {
-    return to_string(resource.highestZone);
+    int abun = resource.abundance[resource.highestZone - 1];
+    return to_string(abun);
   } else if (parameter == "Planet") {
     int p = resource.planet;
     return planetVec.at(p).name;
   } else if (parameter == "Name") {
-    return resource.name;
+    if (resource.name == "Water in the Environment") {
+      return "Water";
+    } else if (resource.name == "Antiflux Particles") {
+      return "Antiflux";
+    } else if (resource.name == "Vegetation Density") {
+      return "Vegetation Den.";
+    } else if (resource.name == "Borexino Precipitate") {
+      return "Borexino Prec.";
+    } else {
+      return resource.name;
+    }
   }
 
   return "Invalid Parameter in function getResourceParameter()";
 }
 
-string StarMap::getRingworldParameter(ringworld ringworld, string parameter) {
+string StarMap::getRingworldParameter(ringworld ringworld, string parameter) const {
   if (parameter == "Galaxy"){
     int sy = ringworld.sys;
     int se = sysVec.at(sy).sector;
@@ -159,10 +170,14 @@ string StarMap::getRingworldParameter(ringworld ringworld, string parameter) {
   return "Invalid Parameter in function getResourceParameter()";
 }
 
-int StarMap::getNumberOfSystems() {
+int StarMap::getNumberOfSystems() const {
   return sysVec.size();
 }
 
-int StarMap::getNumberOfSectors() {
+int StarMap::getNumberOfSectors() const {
   return sectorVec.size();
+}
+
+int StarMap::getPotentialRingworlds() const {
+  return potentialRingworlds;
 }
