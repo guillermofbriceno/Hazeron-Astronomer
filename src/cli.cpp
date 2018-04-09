@@ -227,11 +227,11 @@ vector<vector<string>> generateResourceTable(int currentMemory, vector<string> p
 }
 
 void displayTable(vector<vector<string>> dispText, int separation) {
-  vector<int> maxWidth(dispText.at(0).size());
+  vector<unsigned long> maxWidth(dispText.at(0).size());
   for (unsigned int i = 0; i < dispText.at(0).size(); i++) {
-    for (unsigned int j = 0; j < dispText.size(); j++) {
-      if (dispText.at(j).at(i).length() > maxWidth.at(i))
-        maxWidth.at(i) = dispText.at(j).at(i).length();
+	for (auto& y : dispText) { 
+      if (y.at(i).length() > maxWidth.at(i))
+        maxWidth.at(i) = y.at(i).length();
     }
   }
 
