@@ -29,13 +29,13 @@ StarMap::StarMap(string xmldirectory) {
 vector<ringworld> StarMap::getRingworlds() {
   vector<ringworld> ringworldVector;
   string currentName = "nothing";
-  for (unsigned int i = 0; i < planetVec.size(); i++) {
-    if (planetVec.at(i).bodyType.find("Ringworld Arc") != string::npos) {
-      if (planetVec.at(i).name.find(currentName) == string::npos) {
-        ringworld temp(planetVec.at(i).name, planetVec.at(i).orbit, planetVec.at(i).resource,
-            planetVec.at(i).sys, 1);
+  for (const auto& x : planetVec ) {
+    if (x.bodyType.find("Ringworld Arc") != string::npos) {
+      if (x.name.find(currentName) == string::npos) {
+        ringworld temp(x.name, x.orbit, x.resource,
+            x.sys, 1);
         ringworldVector.push_back(temp);
-        currentName = planetVec.at(i).name;
+        currentName = x.name;
         currentName = currentName.substr(0, currentName.length() - 5);
         ringworldVector.back().name = currentName;
       } else {
