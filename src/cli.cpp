@@ -8,7 +8,7 @@
 
 #include "StarMap.h"
 #include "cli.h"
-
+ 
 using namespace std;
 
 void startCli(StarMap& map) {
@@ -206,7 +206,8 @@ void findAllBest(vector<Resource> &memory, StarMap &map) {
   displayTable(dispText, 3);
 }
 
-vector<vector<string>> generateResourceTable(int currentMemory, vector<string> parameters, vector<Resource> bestResults, StarMap &map) {
+vector<vector<string>> generateResourceTable(int currentMemory, const vector<string>& parameters,
+		const vector<Resource>& bestResults, const StarMap& map) {
   vector<vector<string>> dispText;
   dispText.push_back(parameters);
   for (unsigned int i = 1; i < bestResults.size() + 1; i++) {
