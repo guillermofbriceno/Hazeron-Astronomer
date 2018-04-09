@@ -119,7 +119,7 @@ void help(const string& command) {
 }
 void detail(const vector<Resource>& memory, const string& selection) {
   if (isDigit(selection)) {
-    if (stoi(selection) <= memory.size() && stoi(selection) != 0) {
+    if (stoul(selection) <= memory.size() && stoi(selection) != 0) {
       cout << memory.at(stoi(selection) - 1).name << endl;
     } else {
       cout << "Input out of range in memory." << endl;
