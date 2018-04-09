@@ -1,42 +1,39 @@
-CC = g++
-CFLAGS = -Wall -Wextra -std=c++11 -I../include
-INCLUDES=-I ../include
+CXX = g++
+CXXFLAGS = -Wall -Wextra -std=c++11 -g -O2
+INCL = -I ../include
+IP = ../include
 .PHONY: clean
 
-BUILD=TRUE
-STATIC=FALSE
+DIST=FALSE
 
-ifeq ($(BUILD),TRUE)
-	CFLAGS += -O2
-	ifeq ($(STATIC),TRUE)
-		CFLAGS += -static-libgcc
-		CFLAGS += -static-libstdc++
-		CFLAGS += -Wl,-Bstatic,--whole-archive
-		CFLAGS += -lwinpthread
-		CFLAGS += -Wl,--no-whole-archive
-	endif
+ifeq ($(DIST),TRUE) # chang DIST to TRUE to build a static library to distribute on Windows
+	CXXFLAGS += -static-libgcc
+	CXXFLAGS += -static-libstdc++
+	CXXFLAGS += -Wl,-Bstatic,--whole-archive
+	CXXFLAGS += -lwinpthread
+	CXXFLAGS += -Wl,--no-whole-archive
 endif
 
 
 default: astronomer
 
 astronomer: cli.o elements.o parseMap.o main.o parseMap.o StarMap.o
-	$(CC) $(CFLAGS) -o astronomer cli.o elements.o main.o parseMap.o StarMap.o
+	$(CXX) $(CXXFLAGS) $(INCL) -o astronomer cli.o elements.o main.o parseMap.o StarMap.o
 
-cli.o: cli.cpp ../include/cli.h ../include/StarMap.h StarMap.o
-	$(CC) $(CFLAGS) -c cli.cpp
+cli.o: cli.cpp $(IP)/cli.h $(IP)/StarMap.h StarMap.o
+	$(CXX) $(CXXFLAGS) $(INCL) -c cli.cpp
 
-elements.o: elements.cpp ../include/elements.h
-	$(CC) $(CFLAGS) -c elements.cpp
+elements.o: elements.cpp $(IP)/elements.h
+	$(CXX) $(CXXFLAGS) $(INCL) -c elements.cpp
 
-parseMap.o: parseMap.cpp ../include/elements.h
-	$(CC) $(CFLAGS) -c parseMap.cpp
+parseMap.o: parseMap.cpp $(IP)/elements.h
+	$(CXX) $(CXXFLAGS) $(INCL) -c parseMap.cpp
 
-StarMap.o: ../include/elements.h ../include/parseMap.h ../include/StarMap.h StarMap.cpp
-	$(CC) $(CFLAGS) -c StarMap.cpp
+StarMap.o: $(IP)/elements.h $(IP)/parseMap.h $(IP)/StarMap.h StarMap.cpp
+	$(CXX) $(CXXFLAGS) $(INCL) -c StarMap.cpp
 
-main.o: main.cpp ../include/StarMap.h ../include/cli.h
-	$(CC) $(CFLAGS) -c main.cpp
+main.o: main.cpp $(IP)/StarMap.h $(IP)/cli.h
+	$(CXX) $(CXXFLAGS) $(INCL) -c main.cpp
 
 clean:
 	$(RM) *.o astronomer
