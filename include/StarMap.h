@@ -22,9 +22,9 @@ class StarMap {
 public:
   StarMap();
   StarMap(std::string xmldirectory);
-  std::vector<ringworld> getRingworlds();
+  std::vector<ringworld> getRingworlds() const;
   std::vector<Resource> getAllBestResources() const;
-  std::vector<Resource> findBestResource(std::string resource);
+  std::vector<Resource> findBestResource(std::string resource) const;
   std::string getResourceParameter(Resource resource, const std::string& parameter) const;
   std::string getRingworldParameter(ringworld ringworld, std::string parameter) const;
   int getNumberOfSystems() const;

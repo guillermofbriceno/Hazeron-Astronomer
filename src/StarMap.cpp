@@ -26,7 +26,7 @@ StarMap::StarMap(string xmldirectory) {
 }
 
 //generates a vector of the first instance of every ringworld.
-vector<ringworld> StarMap::getRingworlds() {
+vector<ringworld> StarMap::getRingworlds() const {
   vector<ringworld> ringworldVector;
   string currentName = "nothing";
   for (const auto& x : planetVec ) {
@@ -71,7 +71,7 @@ vector<Resource> StarMap::getAllBestResources() const {
   return bestResults;
 }
 
-vector<Resource> StarMap::findBestResource(string resource) {
+vector<Resource> StarMap::findBestResource(string resource) const {
   resource[0] = toupper(resource[0]);
   vector<Resource> bestResults;
   int top = 0;
