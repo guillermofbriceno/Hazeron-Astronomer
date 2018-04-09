@@ -75,17 +75,17 @@ vector<Resource> StarMap::findBestResource(string resource) const {
   resource[0] = toupper(resource[0]);
   vector<Resource> bestResults;
   int top = 0;
-  for (unsigned int i = 0; i < resourceVec.size(); i++) {
-    if (resourceVec.at(i).name.find(resource) != string::npos) {
-      if (resourceVec.at(i).highestQl > top) {
-        top = resourceVec.at(i).highestQl;
+  for (const auto& x : resourceVec) {
+    if (x.name.find(resource) != string::npos) {
+      if (x.highestQl > top) {
+        top = x.highestQl;
       }
     }
   }
-  for (unsigned int i = 0; i < resourceVec.size(); i++) {
-    if (resourceVec.at(i).name.find(resource) != string::npos) {
-      if (resourceVec.at(i).highestQl == top) {
-        bestResults.push_back(resourceVec.at(i));
+  for (const auto& x : resourceVec) {
+    if (x.name.find(resource) != string::npos) {
+      if (x.highestQl == top) {
+        bestResults.push_back(x);
       }
     }
   }
