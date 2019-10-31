@@ -12,5 +12,5 @@ Everything in your personal starmap .xml file is included in Hazeron Astronomer'
 
 ## Usage
 * Finds star systems for specific material mining
-* Finds best *quality* of resources
+* Finds locations of highest quality resources
 * Ideal for finding ringworlds 
